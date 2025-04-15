@@ -21,16 +21,18 @@ VALID_LICENSES = {
 
 class MissingMetadataFileError(Exception):
     """Missing Copyright yaml file."""
+
     ...
+
 
 class InvalidCopyrightError(Exception):
     """No valid license found in yaml file."""
+
     ...
 
+
 def validate_image_copyright(
-    book: str,
-    extensions: list[str] = EXTS,
-    fail_fast: bool = False
+    book: str, extensions: list[str] = EXTS, fail_fast: bool = False
 ) -> bool:
     """Validate if any correct copyright statements are present for all image files.
 
@@ -46,10 +48,11 @@ def validate_image_copyright(
         fail_fast: If the validator should raise an error upon the first invalid file,
             or check all files before failing.
     """
-    book_dir = Path(book)
+    book_dir = Path(book).absolute()
+
     if not book_dir.is_dir():
         msg = (
-            "Passed book_dir argument '{book_dir}' does not exist or is "
+            f"Passed book_dir argument '{book_dir}' does not exist or is "
             "not a directory!"
         )
         raise ValueError(msg)
@@ -69,15 +72,18 @@ def validate_image_copyright(
                 raise MissingMetadataFileError(msg)
         else:
             with yml_file.open("r") as f:
-                content = f.readlines()
-                if not any(f"license: \"{lic}" in content for lic in VALID_LICENSES):
+                content = "".join(f.readlines())
+                content = content.strip('"').strip("'")
+                if not any(f'license: "{lic}' in content for lic in VALID_LICENSES):
                     msg = f"No valid license detected in file '{yml_file}'"
                     invalid_licenses.append(str(img))
                     if fail_fast:
                         raise InvalidCopyrightError(msg)
 
     if len(missing_ymls) > 0:
-        print("The following files had no .yml files associated with them:", end="\n    ")
+        print(
+            "The following files had no .yml files associated with them:", end="\n    "
+        )
         print("\n    ".join(missing_ymls) + "\n")
     if len(invalid_licenses) > 0:
         print("The following files had no valid licence:", end="\n    ")

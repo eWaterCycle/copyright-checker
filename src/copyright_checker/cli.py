@@ -10,7 +10,7 @@ def main():
     parser.add_argument("book_dir")
     args = parser.parse_args()
     passed_dir = getattr(args, "book_dir", None)
-    
+
     if passed_dir is None:
         msg = "Missing argument book_dir. Please provide dir to book."
         raise ValueError(msg)
