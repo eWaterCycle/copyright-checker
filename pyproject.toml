@@ -1,0 +1,46 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "copyright-checker"
+version = "0.1.0"
+description = "Checks if every image file has an accompanying copyright statement."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{name = "Bart Schilperoort", email = "b.schilperoort@gmail.com"}]
+classifiers = [
+  "Programming Language :: Python :: 3",
+]
+dependencies = [
+]
+
+[project.scripts]
+check-copyright = "copyright_checker.cli:main"
+
+[project.optional-dependencies]
+testing = [
+  "pytest",
+]
+dev = [
+  "ruff"
+]
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["A", "E", "F", "UP", "B", "SIM", "I", "D"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D", "E501"]
+"*/__init__.py" = ["D104"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.setuptools.packages]
+find = {}
+
+[project.urls]
+"Homepage" = "https://github.com/ewatercycle/copyright-checker"
